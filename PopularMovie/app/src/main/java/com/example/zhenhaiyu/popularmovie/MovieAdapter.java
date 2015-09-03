@@ -14,13 +14,13 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 /**
- * Created by zhenhaiyu on 2015-08-24.
+ * Created by zhenhaiyu on 2015-08-27.
  */
-public class MoviePosterAdapter extends BaseAdapter {
+public class MovieAdapter extends BaseAdapter {
     private List<Movie> mMovies;
     private final Activity mContext;
 
-    public MoviePosterAdapter(Activity context, List<Movie> movies) {
+    public MovieAdapter(Activity context, List<Movie> movies) {
         mMovies = movies;
         mContext = context;
     }
@@ -73,5 +73,4 @@ public class MoviePosterAdapter extends BaseAdapter {
         }
         return posterView;
     }
-
 }

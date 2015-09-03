@@ -1,5 +1,7 @@
 package com.example.zhenhaiyu.popularmovie;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,7 +33,6 @@ import java.util.List;
  */
 public class MainActivityFragment extends Fragment {
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
-    private ImageAdapter mImageAdapter;
     private MoviePosterAdapter mPosterAdapter;
     private GridView mposterGridView;
 
@@ -56,6 +57,12 @@ public class MainActivityFragment extends Fragment {
                                     int position, long id) {
                 Toast.makeText(getActivity(), "" + position,
                                 Toast.LENGTH_SHORT).show();
+
+                Context context = getActivity();
+                Movie movie = (Movie) mPosterAdapter.getItem(position);
+                Intent detailIntent = new Intent(context, DetailActivity.class);
+                detailIntent.putExtra("MovieDetail", movie);
+                startActivity(detailIntent);
             }
         });
 
@@ -71,7 +78,7 @@ public class MainActivityFragment extends Fragment {
 
             final String SORT_PARAM = "sort_by";
             final String APIKEY_PARAM = "api_key";
-            String api_key = "7247396130ccf8d000df83fb897fb6d9";
+            String api_key = getString(R.string.api_key);
             HttpURLConnection urlConnection = null;
 
             // build url
@@ -146,8 +153,8 @@ public class MainActivityFragment extends Fragment {
             for(int i = 0; i < movieArray.length(); i++)
             {
                 jsonObject = movieArray.getJSONObject(i);
-                movie = new Movie();
-                movie.id = jsonObject.getLong("id");
+
+                movie = new Movie(jsonObject.getLong("id"));
                 movie.mBackdropPath = jsonObject.getString(BD_PATH);
                 movie.mOriginalTitle = jsonObject.getString(ORI_TITLE);
                 movie.mTitle = jsonObject.getString(TITLE);
