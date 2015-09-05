@@ -80,7 +80,7 @@ public class SlidingTabFragment extends Fragment {
          */
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
 
         /**
@@ -102,7 +102,17 @@ public class SlidingTabFragment extends Fragment {
          */
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Item " + (position + 1);
+           CharSequence cs = "";
+            switch (position){
+               case 0:
+                   cs = "sorted by popularity";
+                   break;
+               case 1:
+                   cs = "sorted by rating";
+                   break;
+            }
+            return cs;
+
         }
         // END_INCLUDE (pageradapter_getpagetitle)
 
