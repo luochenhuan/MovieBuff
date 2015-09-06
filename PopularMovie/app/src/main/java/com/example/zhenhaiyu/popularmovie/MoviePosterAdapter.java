@@ -1,6 +1,8 @@
 package com.example.zhenhaiyu.popularmovie;
 
 import android.app.Activity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +13,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by zhenhaiyu on 2015-08-24.
  */
-public class MoviePosterAdapter extends BaseAdapter {
+public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.PosterViewHolder> {
     private List<Movie> mMovies;
     private final Activity mContext;
 
@@ -25,42 +28,54 @@ public class MoviePosterAdapter extends BaseAdapter {
         mContext = context;
     }
 
+    public void updateAllData(List<Movie> movies){
+        mMovies.clear();
+        mMovies.addAll(movies);
+    }
+    public static class PosterViewHolder extends RecyclerView.ViewHolder {
+        protected CardView cv;
+        protected TextView vTitle;
+        protected RatingBar vRatingBar;
+        protected TextView vRate;
+        protected ImageView vPoster;
+
+        public PosterViewHolder(View posterView) {
+            super(posterView);
+            cv = (CardView) posterView.findViewById(R.id.cv_main);
+            vPoster = (ImageView) posterView.findViewById(R.id.iv_poster);
+            vTitle = (TextView) posterView.findViewById(R.id.tv_poster_title);
+            vRatingBar = (RatingBar) posterView.findViewById(R.id.rb_rate);
+            vRate = (TextView) posterView.findViewById(R.id.tv_rate);
+
+        }
+    }
+
     @Override
-    public int getCount(){
+    public int getItemCount(){
         return mMovies.size();
     }
 
-    @Override
-    public Object getItem(int position){
+    public Movie getItem(int position){
         return mMovies.get(position);
     }
 
+
     @Override
-    public long getItemId(int position){
-        return 0;
+    public PosterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View itemView = LayoutInflater.
+                from(viewGroup.getContext()).
+                inflate(R.layout.poster_gridlayout, viewGroup, false);
+
+        return new PosterViewHolder(itemView);
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        LayoutInflater inflater = mContext.getLayoutInflater();
-        View posterView = inflater.inflate(R.layout.poster_gridlayout, null, true);
-        posterView.setBackgroundColor(mContext.getResources().getColor(R.color.grid_darkbg));
+    public void onBindViewHolder(PosterViewHolder posterViewHolder, int i) {
+        Movie movie = mMovies.get(i);
 
-        TextView title = (TextView) posterView.findViewById(R.id.tv_poster_title);
-        title.setText(mMovies.get(position).mTitle);
-//        title.setTypeface(custom_font);
-        RatingBar rbRate = (RatingBar) posterView.findViewById(R.id.rb_rate);
-        float rateStar = (float)mMovies.get(position).mAvgVote/2;
-        rbRate.setRating(rateStar);
-
-        TextView tvRate = (TextView) posterView.findViewById(R.id.tv_rate);
-        String rateTxt = mMovies.get(position).mAvgVote + "/10";
-        tvRate.setText(rateTxt);
-//        tvRate.setTextColor(mContext.getResources().getColor(R.color.grid_lightrate));
-
-        ImageView imageView = (ImageView) posterView.findViewById(R.id.iv_poster);
-        if (mMovies.get(position).mPosterPath != null) {
-            String posterURL = mContext.getString(R.string.img_base_url) + mMovies.get(position).mPosterPath;
+        ImageView imageView = posterViewHolder.vPoster;
+        if (movie.mPosterPath != null) {
+            String posterURL = mContext.getString(R.string.img_base_url) + movie.mPosterPath;
             int posterSize = (int) mContext.getResources().getDimension(R.dimen.poster_size);
             Picasso.with(mContext)
                     .load(posterURL)
@@ -71,7 +86,19 @@ public class MoviePosterAdapter extends BaseAdapter {
         } else{
             imageView.setImageResource(R.drawable.artist_placeholder_error);
         }
-        return posterView;
+
+        posterViewHolder.vTitle.setText(movie.mOriginalTitle);
+
+        float rateStar = (float)movie.mAvgVote/2;
+        posterViewHolder.vRatingBar.setRating(rateStar);
+
+        String rateTxt = movie.mAvgVote + "/10";
+        posterViewHolder.vRate.setText(rateTxt);
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
     }
 
 }

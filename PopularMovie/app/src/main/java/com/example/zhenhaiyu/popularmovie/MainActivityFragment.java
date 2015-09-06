@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +40,7 @@ public class MainActivityFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     private int mPage;
     private MoviePosterAdapter mPosterAdapter;
-    private GridView mposterGridView;
+    private RecyclerView mRecyclerView;
 
     public MainActivityFragment() {
     }
@@ -54,12 +58,17 @@ public class MainActivityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
+        mPosterAdapter = new MoviePosterAdapter(getActivity(), new ArrayList<Movie>());
     }
+
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.gridlayout_main, container, false);
-        mposterGridView = (GridView) rootView.findViewById(R.id.posterGrid);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        RecyclerView rv = (RecyclerView)inflater.inflate(
+                R.layout.recyclerview_main, container, false);
+
+        rv.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        rv.setAdapter(mPosterAdapter);
 
         FetchMoviesTask moviesTask = new FetchMoviesTask();
         String sortPref = "";
@@ -74,23 +83,24 @@ public class MainActivityFragment extends Fragment {
         }
         moviesTask.execute(sortPref);
 
-        mposterGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Toast.makeText(getActivity(), "" + position,
-                                Toast.LENGTH_SHORT).show();
+//        mRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            public void onItemClick(AdapterView<?> parent, View v,
+//                                    int position, long id) {
+//                Toast.makeText(getActivity(), "" + position,
+//                                Toast.LENGTH_SHORT).show();
+//
+//                Context context = getActivity();
+//                Movie movie = mPosterAdapter.getItem(position);
+//                Intent detailIntent = new Intent(context, DetailActivity.class);
+//                detailIntent.putExtra("MovieDetail", movie);
+//                startActivity(detailIntent);
+//            }
+//        });
 
-                Context context = getActivity();
-                Movie movie = (Movie) mPosterAdapter.getItem(position);
-                Intent detailIntent = new Intent(context, DetailActivity.class);
-                detailIntent.putExtra("MovieDetail", movie);
-                startActivity(detailIntent);
-            }
-        });
-
-        return rootView;
+        return rv;
 
     }
+
 
     private class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
         @Override
@@ -149,8 +159,8 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Movie> movies) {
 //              Log.v(LOG_TAG, String.valueOf(artists.size()));
-            mPosterAdapter = new MoviePosterAdapter(getActivity(), movies);
-            mposterGridView.setAdapter(mPosterAdapter);
+            mPosterAdapter.updateAllData(movies);
+            mPosterAdapter.notifyDataSetChanged();
         }
 
 
