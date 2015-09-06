@@ -2,4 +2,6 @@
 <resources>
     <color name="grid_darkbg">#263238</color>
     <color name="grid_lightrate">#E0E0E0</color>
+    <color name="window_background">#FFF5F5F5</color>
+
 </resources>

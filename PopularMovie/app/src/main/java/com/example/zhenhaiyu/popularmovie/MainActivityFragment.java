@@ -33,24 +33,46 @@ import java.util.List;
  */
 public class MainActivityFragment extends Fragment {
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
+    public static final String ARG_PAGE = "ARG_PAGE";
+    private int mPage;
     private MoviePosterAdapter mPosterAdapter;
     private GridView mposterGridView;
 
     public MainActivityFragment() {
     }
 
+    public static MainActivityFragment newInstance(int page) {
+        Bundle args = new Bundle();
+        args.putInt(ARG_PAGE, page);
+
+        MainActivityFragment fragment = new MainActivityFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
+        mPage = getArguments().getInt(ARG_PAGE);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.gridlayout_main, container, false);
         mposterGridView = (GridView) rootView.findViewById(R.id.posterGrid);
+
         FetchMoviesTask moviesTask = new FetchMoviesTask();
-        moviesTask.execute("popularity.desc");
+        String sortPref = "";
+        switch (mPage) {
+            case 0:
+                sortPref = "popularity.desc";
+                break;
+            case 1:
+                sortPref = "vote_average.desc";
+                break;
+
+        }
+        moviesTask.execute(sortPref);
 
         mposterGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
