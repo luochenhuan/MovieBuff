@@ -40,6 +40,12 @@ public class MovieAdapter extends BaseAdapter {
         return 0;
     }
 
+    public void updateAdapter(List<Movie> movies) {
+        this.mMovies= movies;
+        //and call notifyDataSetChanged
+        notifyDataSetChanged();
+    }
+
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = mContext.getLayoutInflater();

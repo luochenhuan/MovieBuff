@@ -1,11 +1,11 @@
 package com.example.zhenhaiyu.popularmovie;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,54 +31,50 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
-    private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
+public class MovieUpdate {
+    private final String LOG_TAG = MovieUpdate.class.getSimpleName();
+    private final Activity mContext;
+    private final View mRootView;
     private MoviePosterAdapter mPosterAdapter;
     private GridView mposterGridView;
+    public String[] mRequestParams;
 
-    public MainActivityFragment() {
+    public MovieUpdate(Activity context, View view) {
+        this.mContext = context;
+        this.mRootView = view;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-
-    }
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.gridlayout_main, container, false);
-        mposterGridView = (GridView) rootView.findViewById(R.id.posterGrid);
+    public View update(String[] requestParams) {
+        mposterGridView = (GridView) mRootView.findViewById(R.id.posterGrid);
         FetchMoviesTask moviesTask = new FetchMoviesTask();
-        moviesTask.execute("popularity.desc");
+        moviesTask.execute(requestParams);
 
         mposterGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(getActivity(), "" + position,
+                Toast.makeText(mContext, "" + position,
                                 Toast.LENGTH_SHORT).show();
 
-                Context context = getActivity();
                 Movie movie = (Movie) mPosterAdapter.getItem(position);
-                Intent detailIntent = new Intent(context, DetailActivity.class);
+                Intent detailIntent = new Intent(mContext, DetailActivity.class);
                 detailIntent.putExtra("MovieDetail", movie);
-                startActivity(detailIntent);
+                mContext.startActivity(detailIntent);
             }
         });
-
-        return rootView;
-
+        return mRootView;
     }
 
     private class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
+        private final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
+
         @Override
-        protected List<Movie> doInBackground(String... sortPref) {
-            List<Movie> movies = new ArrayList<Movie>();
+        protected List<Movie> doInBackground(String... requests) {
+            List<Movie> movies = new ArrayList<>();
             String movieJsonStr = null;
 
             final String SORT_PARAM = "sort_by";
             final String APIKEY_PARAM = "api_key";
-            String api_key = getString(R.string.api_key);
+
             HttpURLConnection urlConnection = null;
 
             // build url
@@ -88,23 +84,25 @@ public class MainActivityFragment extends Fragment {
                     .appendPath("3")
                     .appendPath("discover")
                     .appendPath("movie")
-                    .appendQueryParameter(SORT_PARAM, sortPref[0])
-                    .appendQueryParameter(APIKEY_PARAM, api_key)
+                    .appendQueryParameter(SORT_PARAM, requests[0])
+                    .appendQueryParameter(APIKEY_PARAM, requests[1])
             ;
 
             String urlStr = builder.build().toString();
             Log.d(LOG_TAG, "tmdb GET request: " + urlStr);
 
             try {
-//                URL url = new URL(urlStr);
-//                urlConnection = (HttpURLConnection) url.openConnection();
-//                urlConnection.setRequestMethod("GET");
-//                urlConnection.connect();
-//                // Read the input stream into a String
-//                InputStream inputStream = urlConnection.getInputStream();
+                URL url = new URL(urlStr);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
 
-                // same functionality as the above code block
-                movieJsonStr = getJsonString(new URL(urlStr).openStream());
+                // same functionality as the above code block BUT not safe
+//            movieJsonStr = getJsonString(new URL(urlStr).openStream());
+                movieJsonStr = getJsonString(inputStream);
+
                 Log.d(LOG_TAG, "tmdb response JSONstring: " + movieJsonStr);
             } catch(IOException e) {
                 e.printStackTrace();
@@ -126,9 +124,6 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
-//              Log.v(LOG_TAG, String.valueOf(artists.size()));
-            mPosterAdapter = new MoviePosterAdapter(getActivity(), movies);
-            mposterGridView.setAdapter(mPosterAdapter);
         }
 
 
@@ -144,7 +139,7 @@ public class MainActivityFragment extends Fragment {
             final String AVG_VOTE = "vote_average";
             final String POPULARITY = "popularity";
             final String OVERVIEW = "overview";
-            List<Movie> movies = new ArrayList<Movie>();
+            List<Movie> movies = new ArrayList<>();
             Movie movie;
 
             JSONObject jsonObject = new JSONObject(jsonStr);
@@ -213,6 +208,5 @@ public class MainActivityFragment extends Fragment {
             return buffer.toString();
         }
     }
-
 }
 

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.example.zhenhaiyu.popularmovie.common.view.SlidingTabLayout;
@@ -16,9 +17,7 @@ import com.example.zhenhaiyu.popularmovie.common.view.SlidingTabLayout;
  * Created by zhenhaiyu on 2015-09-05.
  */
 public class SlidingTabFragment extends Fragment {
-
     private final String LOG_TAG = SlidingTabFragment.class.getSimpleName();
-
     /**
      * A custom {@link ViewPager} title strip which looks much like Tabs present in Android v4.0 and
      * above, but is designed to give continuous feedback to the user when scrolling.
@@ -74,7 +73,6 @@ public class SlidingTabFragment extends Fragment {
      * {@link SlidingTabLayout}.
      */
     class MainPagerAdapter extends PagerAdapter {
-
         /**
          * @return the number of pages to display
          */
@@ -123,14 +121,29 @@ public class SlidingTabFragment extends Fragment {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             // Inflate a new layout from our resources
-            View view = getActivity().getLayoutInflater().inflate(R.layout.poster_gridlayout,
+            View view = getActivity().getLayoutInflater().inflate(R.layout.gridlayout_main,
                     container, false);
             // Add the newly created View to the ViewPager
             container.addView(view);
 
-            // Retrieve a TextView from the inflated View, and update it's text
-            TextView title = (TextView) view.findViewById(R.id.tv_poster_title);
-            title.setText(String.valueOf(position + 1));
+            String api_key = getString(R.string.api_key);
+            String sortPref = "";
+
+            switch (position){
+                case 0:
+                    sortPref = "popularity.desc";
+                    break;
+                case 1:
+                    sortPref = "vote_average.desc";
+                    break;
+            }
+            String[] params = new String[]{sortPref, api_key};
+            MovieUpdate movieUpdate = new MovieUpdate(getActivity(), view);
+            view = movieUpdate.update(params);
+
+//            // Retrieve a TextView from the inflated View, and update it's text
+//            TextView title = (TextView) view.findViewById(R.id.tv_poster_title);
+//            title.setText(String.valueOf(position + 1));
 
             Log.d(LOG_TAG, "instantiateItem() [position: " + position + "]");
 
