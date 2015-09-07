@@ -19,9 +19,10 @@ import java.util.List;
  * Created by zhenhaiyu on 2015-08-24.
  */
 public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.PosterViewHolder> {
+    private final String LOG_TAG = MoviePosterAdapter.class.getSimpleName();
+
     private List<Movie> mMovies;
     private final Activity mContext;
-    private final String LOG_TAG = MoviePosterAdapter.class.getSimpleName();
 
     public MoviePosterAdapter(Activity context, List<Movie> movies) {
         mMovies = movies;
@@ -74,7 +75,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
         ImageView imageView = posterViewHolder.vPoster;
         if (movie.mPosterPath != null) {
             String posterURL = mContext.getString(R.string.img_base_url) + movie.mPosterPath;
-            Log.d(LOG_TAG, posterURL);
+//            Log.d(LOG_TAG, posterURL);
 
             int posterWidth = (int) mContext.getResources().getDimension(R.dimen.poster_width);
             int posterHeight = 4*posterWidth/3;
