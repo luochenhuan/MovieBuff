@@ -3,17 +3,16 @@ package com.example.zhenhaiyu.popularmovie;
 import android.app.Activity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +21,7 @@ import java.util.List;
 public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.PosterViewHolder> {
     private List<Movie> mMovies;
     private final Activity mContext;
+    private final String LOG_TAG = MoviePosterAdapter.class.getSimpleName();
 
     public MoviePosterAdapter(Activity context, List<Movie> movies) {
         mMovies = movies;
@@ -46,7 +46,6 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
             vTitle = (TextView) posterView.findViewById(R.id.tv_poster_title);
             vRatingBar = (RatingBar) posterView.findViewById(R.id.rb_rate);
             vRate = (TextView) posterView.findViewById(R.id.tv_rate);
-
         }
     }
 
@@ -59,12 +58,11 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
         return mMovies.get(position);
     }
 
-
     @Override
     public PosterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
-                inflate(R.layout.poster_gridlayout, viewGroup, false);
+                inflate(R.layout.poster_cardview, viewGroup, false);
 
         return new PosterViewHolder(itemView);
     }
@@ -76,12 +74,15 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
         ImageView imageView = posterViewHolder.vPoster;
         if (movie.mPosterPath != null) {
             String posterURL = mContext.getString(R.string.img_base_url) + movie.mPosterPath;
-            int posterSize = (int) mContext.getResources().getDimension(R.dimen.poster_size);
+            Log.d(LOG_TAG, posterURL);
+
+            int posterWidth = (int) mContext.getResources().getDimension(R.dimen.poster_width);
+            int posterHeight = 4*posterWidth/3;
             Picasso.with(mContext)
                     .load(posterURL)
                     .placeholder(R.drawable.ic_launcher)
                     .error(R.drawable.artist_placeholder_error)
-                    .resize(posterSize, 0)
+                    .resize(posterWidth, posterHeight)
                     .into(imageView);
         } else{
             imageView.setImageResource(R.drawable.artist_placeholder_error);

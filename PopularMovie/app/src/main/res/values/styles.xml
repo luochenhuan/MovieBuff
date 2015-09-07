@@ -19,12 +19,15 @@
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="Widget.CardContent" parent="android:Widget">
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingTop">24dp</item>
-        <item name="android:paddingBottom">24dp</item>
+    <style name="MainCardView" parent="CardView">
+        <item name="android:paddingLeft">@dimen/card_padding</item>
+        <item name="android:paddingRight">@dimen/card_padding</item>
+        <item name="android:paddingTop">@dimen/card_padding</item>
+        <item name="android:paddingBottom">@dimen/card_padding</item>
+        <item name="cardCornerRadius">@dimen/card_rad</item>
+        <item name="cardElevation">4dp</item>
         <item name="android:orientation">vertical</item>
     </style>
+
 
 </resources>
