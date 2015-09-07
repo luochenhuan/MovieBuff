@@ -7,7 +7,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cv_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_parent"
+        android:layout_height="match_parent"
         android:layout_margin="@dimen/card_margin"
         style="@style/MainCardView" >
 
@@ -19,13 +19,15 @@
                 android:id="@+id/iv_poster"
                 android:layout_width="@dimen/poster_width"
                 android:layout_height="wrap_content"
+                android:layout_above= "@id/iv_poster"
                 android:layout_centerInParent="true" />
 
             <TextView
                 android:id="@+id/tv_poster_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below= "@id/iv_poster"
+                android:layout_gravity="bottom"
+                android:gravity="center_vertical"
                 android:textSize="14sp"
                 android:scrollHorizontally="true"
                 android:ellipsize="end"

@@ -1,22 +1,15 @@
 package com.example.zhenhaiyu.popularmovie;
 
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,10 +30,11 @@ import java.util.List;
  */
 public class MainActivityFragment extends Fragment {
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
+    private final String KEY_MOVIES = "saved_movies";
     public static final String ARG_PAGE = "ARG_PAGE";
     private int mPage;
+    private ArrayList<Movie> mMovies;
     private MoviePosterAdapter mPosterAdapter;
-    private RecyclerView mRecyclerView;
 
     public MainActivityFragment() {
     }
@@ -57,11 +51,15 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mMovies = savedInstanceState.getParcelableArrayList(KEY_MOVIES);
+        } else {
+            mMovies = new ArrayList<>();
+        }
         mPage = getArguments().getInt(ARG_PAGE);
-        mPosterAdapter = new MoviePosterAdapter(getActivity(), new ArrayList<Movie>());
+        mPosterAdapter = new MoviePosterAdapter(getActivity(), mMovies);
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RecyclerView rv = (RecyclerView)inflater.inflate(
@@ -101,6 +99,11 @@ public class MainActivityFragment extends Fragment {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(KEY_MOVIES, mMovies);
+        super.onSaveInstanceState(outState);
+    }
 
     private class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
         @Override
