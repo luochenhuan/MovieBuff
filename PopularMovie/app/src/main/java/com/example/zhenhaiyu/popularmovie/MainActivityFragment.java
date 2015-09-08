@@ -34,7 +34,6 @@ public class MainActivityFragment extends Fragment {
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
     private static final int SPAN_COUNT = 2;
     private final String KEY_MOVIES = "saved_movies";
-    private int mPage;
     private ArrayList<Movie> mMovies;
     private MoviePosterAdapter mPosterAdapter;
     private RecyclerView mRecyclerView;
