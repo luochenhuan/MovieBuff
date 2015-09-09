@@ -1,9 +1,12 @@
 package com.example.zhenhaiyu.popularmovie;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +17,19 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
+/* good ref to set up nav layout & action bar:
+ * https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
+ *
+ * good ref to design lab:
+ * http://inthecheesefactory.com/blog/android-design-support-library-codelab/en
+ */
+
 public class MainActivity extends AppCompatActivity {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String TAG_MAIN_FRAGMENT = "main_fragment";
     private DrawerLayout mDrawerLayout;
+    private Toolbar mToolbar;
+    private ActionBarDrawerToggle mDrawerToggle;
     private MainActivityFragment mMainFragment;
 
     @Override
@@ -32,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
+
+        mDrawerToggle = setupDrawerToggle();
+        // Tie DrawerLayout events to the ActionBarToggle
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState != null) {
         // saved instance state, fragment may exist
@@ -55,12 +71,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        // Set a Toolbar to replace the ActionBar.
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
+        // Set the menu icon instead of the launcher icon.
         final ActionBar ab = getSupportActionBar();
         ab.setTitle(R.string.title_activity_main);
-        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+//        ab.setHomeAsUpIndicator(R.drawable.ic_menu); // The ActionBarDrawerToggle renders a custom DrawerArrowDrawable
         ab.setDisplayHomeAsUpEnabled(true);
     }
 
@@ -72,44 +90,58 @@ public class MainActivity extends AppCompatActivity {
                         menuItem.setChecked(true);
                         mDrawerLayout.closeDrawers();
                         //Check to see which item was being clicked and perform appropriate action
-                        switch (menuItem.getItemId()){
+                        switch (menuItem.getItemId()) {
                             //Replacing the main content with ContentFragment Which is our Inbox View;
                             case R.id.sort_polularity_item:
                                 Toast.makeText(getApplicationContext(), "sort_polularity_item", Toast.LENGTH_SHORT).show();
                                 return true;
 
                             case R.id.sort_rating_item:
-                                Toast.makeText(getApplicationContext(),"sort_rating_item",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "sort_rating_item", Toast.LENGTH_SHORT).show();
                                 return true;
 
                             default:
-                                Toast.makeText(getApplicationContext(),"Somethings Wrong",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
                                 return true;
 
                         }
                     }
                 });
+
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open,  R.string.drawer_close);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        // The action bar home/up action should open or close the drawer.
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                mDrawerLayout.openDrawer(GravityCompat.START);
+//                return true;
+//        }
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggles
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override

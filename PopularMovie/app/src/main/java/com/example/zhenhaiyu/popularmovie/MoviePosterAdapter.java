@@ -36,7 +36,6 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
     public static class PosterViewHolder extends RecyclerView.ViewHolder {
         protected CardView cv;
         protected TextView vTitle;
-        protected RatingBar vRatingBar;
         protected TextView vRate;
         protected ImageView vPoster;
 
@@ -45,7 +44,6 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
             cv = (CardView) posterView.findViewById(R.id.cv_main);
             vPoster = (ImageView) posterView.findViewById(R.id.iv_poster);
             vTitle = (TextView) posterView.findViewById(R.id.tv_poster_title);
-            vRatingBar = (RatingBar) posterView.findViewById(R.id.rb_rate);
             vRate = (TextView) posterView.findViewById(R.id.tv_rate);
         }
     }
@@ -92,7 +90,6 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
         posterViewHolder.vTitle.setText(movie.mOriginalTitle);
 
         float rateStar = (float)movie.mAvgVote/2;
-        posterViewHolder.vRatingBar.setRating(rateStar);
 
         String rateTxt = movie.mAvgVote + "/10";
         posterViewHolder.vRate.setText(rateTxt);
