@@ -122,8 +122,8 @@ public class MainActivityFragment extends Fragment implements RecyclerViewClickL
 
     @Override
     public void recyclerViewListClicked(View v, Movie m) {
-        Toast.makeText(getActivity(), "click " + m.mTitle,
-                        Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "click " + m.mTitle,
+//                        Toast.LENGTH_SHORT).show();
         Context context = getActivity();
         Intent detailIntent = new Intent(context, DetailActivity.class);
         detailIntent.putExtra(getResources().getString(R.string.title_activity_detail), m);

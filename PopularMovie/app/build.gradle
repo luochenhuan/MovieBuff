@@ -26,6 +26,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.+'
     compile 'com.android.support:design:23.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.ms-square:expandableTextView:0.1.4'
 }
 
 repositories {

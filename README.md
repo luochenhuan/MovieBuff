@@ -8,12 +8,18 @@ The whole UI design follows Google's [Material Design](https://developer.android
 With ``MovieBuff`` app, you can:
 * Discover the most popular or the highest rated movies
 
-## Screens
+## Screenshots
 
 
 ## Key Tech Features
-* Use Sharedpreferences to store sort preferences
-* Use of Design Library
+* Use Sharedpreferences to store/restore sort request parameter
+* Use of Android Design Support Library: 
+  - Navigation Drawer
+  - CardView
+  - CoordinatorLayout
+  - Toolbar
+  - CollapsingToolbarLayout
+  - Floating Action Button
   
 
 ## How to Use
@@ -27,3 +33,4 @@ The target sdk version is **23**, and the min sdk version is **15**.
 
 ## Third-party Libraries
 * [Picasso](http://square.github.io/picasso/)
+* [ExpandableTextView](https://github.com/Manabu-GT/ExpandableTextView)
