@@ -3,10 +3,13 @@ package com.example.zhenhaiyu.popularmovie;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
@@ -60,8 +63,14 @@ public class MainActivityFragment extends Fragment implements RecyclerViewClickL
                 if (key.equals(getResources().getString(R.string.nav_pref))){
                     Log.d(LOG_TAG, "nav_pref changed!");
                     mNavPref = sharedPreferences.getString(key, null);
-                    FetchMoviesTask moviesTask = new FetchMoviesTask();
-                    moviesTask.execute(mNavPref);
+
+                    if (networkConnected() == true) {
+                        FetchMoviesTask moviesTask = new FetchMoviesTask();
+                        moviesTask.execute(mNavPref);
+                    }
+                    else {
+                        snackbarInform();
+                    }
                 }
             }
         };
@@ -83,9 +92,14 @@ public class MainActivityFragment extends Fragment implements RecyclerViewClickL
             mMovies = savedInstanceState.getParcelableArrayList(KEY_MOVIES);
             mPosterAdapter.updateAllData(mMovies);
         } else {
-            mMovies = new ArrayList<>();
-            FetchMoviesTask moviesTask = new FetchMoviesTask();
-            moviesTask.execute(mNavPref);
+            if (networkConnected() == true) {
+                mMovies = new ArrayList<>();
+                FetchMoviesTask moviesTask = new FetchMoviesTask();
+                moviesTask.execute(mNavPref);
+            }
+            else {
+                snackbarInform();
+            }
         }
 
         return rootView;
@@ -275,5 +289,22 @@ public class MainActivityFragment extends Fragment implements RecyclerViewClickL
         }
     }
 
+    private boolean networkConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    private void snackbarInform(){
+        Snackbar.make(getActivity().findViewById(R.id.content_fragment),
+                        "Woops! Seems we lost network connection ...", Snackbar.LENGTH_INDEFINITE)
+                .setAction("CLOSE", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    }
+                })
+                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
+                .show();
+    }
 }
 

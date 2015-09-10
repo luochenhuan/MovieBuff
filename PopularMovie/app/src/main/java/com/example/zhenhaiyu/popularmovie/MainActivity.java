@@ -22,7 +22,7 @@ import android.widget.Toast;
 /* good ref to set up nav layout & action bar:
  * https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
  *
- * good ref to design lab:
+ * good ref to design library:
  * http://inthecheesefactory.com/blog/android-design-support-library-codelab/en
  */
 

@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/sort_items"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/sort_polularity_item"
             android:checked="true"
-            android:icon="@drawable/ic_done"
+            android:icon="@drawable/ic_trending_up_black_24dp"
             android:title="@string/sort_polularity"/>
         <item
             android:id="@+id/sort_rating_item"
-            android:icon="@drawable/ic_event"
+            android:icon="@drawable/ic_grade_black_24dp"
             android:title="@string/sort_rating"/>
     </group>
+
+    <group
+        android:id="@+id/settings"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_armario"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="Settings"  />
+
+    </group>
+
 </menu>
