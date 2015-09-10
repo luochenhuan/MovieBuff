@@ -1,11 +1,12 @@
 <resources>
-    <string name="app_name">Popular Movies</string>
+    <string name="app_name">Movie Buff</string>
     <string name="title_activity_main">Popular Movies</string>
     <string name="title_activity_detail">Detail</string>
     <string name="img_base_url">http://image.tmdb.org/t/p/w185/</string>
     <string name="api_key"></string>
-    <string name="sort_polularity">Sort by Popularity</string>
-    <string name="sort_rating">Sort by Rating</string>
+    <string name="nav_pref">nav_pref</string>
+    <string name="sort_polularity">popularity.desc</string>
+    <string name="sort_rating">vote_average.desc</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 </resources>

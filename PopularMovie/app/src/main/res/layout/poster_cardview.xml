@@ -34,14 +34,16 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textSize="16sp"
-                style="@style/PosterTextAppearance"/>
+                android:textStyle="bold"
+                style="@style/PosterTextAppearance" />
 
             <TextView
                 android:id="@+id/tv_rate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below= "@id/tv_poster_title"
-                style="@style/PosterTextAppearance"/>
+                android:textColor="@color/light_ratetext"
+                style="@style/PosterTextAppearance" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

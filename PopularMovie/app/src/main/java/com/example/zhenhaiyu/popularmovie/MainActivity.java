@@ -1,5 +1,7 @@
 package com.example.zhenhaiyu.popularmovie;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -27,22 +29,44 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String TAG_MAIN_FRAGMENT = "main_fragment";
+    private static final String MyPREFERENCES = "MyPrefs" ;
+
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mDrawerToggle;
     private MainActivityFragment mMainFragment;
+    SharedPreferences movieDisplayPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initializing Toolbar
         initToolbar();
 
+        //Initializing NavigationView
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
+            //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
             setupDrawerContent(navigationView);
+        }
+
+        // Restore preferences or Set default value
+        movieDisplayPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        String NavPref = movieDisplayPreferences.getString(getResources().getString(R.string.nav_pref),
+                        getResources().getString(R.string.sort_polularity));
+        switch (NavPref){
+            case "popularity.desc":
+                navigationView.getMenu().getItem(0).setChecked(true);
+                break;
+            case "vote_average.desc":
+                navigationView.getMenu().getItem(1).setChecked(true);
+                break;
+            default:
+                Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
+                break;
         }
 
         mDrawerToggle = setupDrawerToggle();
@@ -66,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
             transaction.commit();
         }
 
-
-
     }
 
     private void initToolbar() {
@@ -89,15 +111,20 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         menuItem.setChecked(true);
                         mDrawerLayout.closeDrawers();
+                        SharedPreferences.Editor editor = movieDisplayPreferences.edit();
                         //Check to see which item was being clicked and perform appropriate action
                         switch (menuItem.getItemId()) {
                             //Replacing the main content with ContentFragment Which is our Inbox View;
                             case R.id.sort_polularity_item:
-                                Toast.makeText(getApplicationContext(), "sort_polularity_item", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(), "sort_polularity_item", Toast.LENGTH_SHORT).show();
+                                editor.putString(getResources().getString(R.string.nav_pref), getResources().getString(R.string.sort_polularity));
+                                editor.commit();
                                 return true;
 
                             case R.id.sort_rating_item:
-                                Toast.makeText(getApplicationContext(), "sort_rating_item", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(), "sort_rating_item", Toast.LENGTH_SHORT).show();
+                                editor.putString(getResources().getString(R.string.nav_pref), getResources().getString(R.string.sort_rating));
+                                editor.commit();
                                 return true;
 
                             default:

@@ -1,8 +1,12 @@
 package com.example.zhenhaiyu.popularmovie;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,27 +35,45 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment implements RecyclerViewClickListener {
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
+    private static final String MyPREFERENCES = "MyPrefs" ;
     private static final int SPAN_COUNT = 2;
     private final String KEY_MOVIES = "saved_movies";
     private ArrayList<Movie> mMovies;
     private MoviePosterAdapter mPosterAdapter;
     private RecyclerView mRecyclerView;
+    private SharedPreferences.OnSharedPreferenceChangeListener mPrefListener;
+    SharedPreferences movieDisplayPreferences;
+    private String mNavPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        Log.d(LOG_TAG, "onCreate");
 //         Retain this fragment across configuration changes.
         setRetainInstance(true);
-        mPosterAdapter = new MoviePosterAdapter(getActivity(), new ArrayList<Movie>());
+
+        movieDisplayPreferences = getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        mPrefListener = new SharedPreferences.OnSharedPreferenceChangeListener(){
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (key.equals(getResources().getString(R.string.nav_pref))){
+                    Log.d(LOG_TAG, "nav_pref changed!");
+                    mNavPref = sharedPreferences.getString(key, null);
+                    FetchMoviesTask moviesTask = new FetchMoviesTask();
+                    moviesTask.execute(mNavPref);
+                }
+            }
+        };
+        mPosterAdapter = new MoviePosterAdapter(getActivity(), this, new ArrayList<Movie>());
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(LOG_TAG, "onCreateView");
+        mNavPref = movieDisplayPreferences.getString(getResources().getString(R.string.nav_pref), null);
+        Log.d(LOG_TAG, "onCreateView: " + mNavPref);
+
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.main_recyclerview);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), SPAN_COUNT));
@@ -62,35 +85,35 @@ public class MainActivityFragment extends Fragment {
         } else {
             mMovies = new ArrayList<>();
             FetchMoviesTask moviesTask = new FetchMoviesTask();
-            String sortPref = "popularity.desc";
-//        switch (mPage) {
-//            case 0:
-//                sortPref = "popularity.desc";
-//                break;
-//            case 1:
-//                sortPref = "vote_average.desc";
-//                break;
-//
-//        }
-            moviesTask.execute(sortPref);
+            moviesTask.execute(mNavPref);
         }
-
-//        mRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            public void onItemClick(AdapterView<?> parent, View v,
-//                                    int position, long id) {
-//                Toast.makeText(getActivity(), "" + position,
-//                                Toast.LENGTH_SHORT).show();
-//
-//                Context context = getActivity();
-//                Movie movie = mPosterAdapter.getItem(position);
-//                Intent detailIntent = new Intent(context, DetailActivity.class);
-//                detailIntent.putExtra("MovieDetail", movie);
-//                startActivity(detailIntent);
-//            }
-//        });
 
         return rootView;
 
+    }
+
+    @Override
+    public void onResume() {
+        Log.d(LOG_TAG, "onResume");
+        movieDisplayPreferences.registerOnSharedPreferenceChangeListener(mPrefListener);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(LOG_TAG, "onPause");
+        movieDisplayPreferences.unregisterOnSharedPreferenceChangeListener(mPrefListener);
+        super.onPause();
+    }
+
+    @Override
+    public void recyclerViewListClicked(View v, Movie m) {
+        Toast.makeText(getActivity(), "click " + m.mTitle,
+                        Toast.LENGTH_SHORT).show();
+        Context context = getActivity();
+        Intent detailIntent = new Intent(context, DetailActivity.class);
+        detailIntent.putExtra(getResources().getString(R.string.title_activity_detail), m);
+        startActivity(detailIntent);
     }
 
     @Override
@@ -105,6 +128,7 @@ public class MainActivityFragment extends Fragment {
         Log.d(LOG_TAG, "onDestroy fragment");
         super.onDestroy();
     }
+
 
     private class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movie>> {
         @Override
@@ -162,9 +186,9 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<Movie> movies) {
-//              Log.v(LOG_TAG, String.valueOf(artists.size()));
             mMovies = movies;
             mPosterAdapter.updateAllData(mMovies);
+            Log.d(LOG_TAG, "mPosterAdapter update");
             mPosterAdapter.notifyDataSetChanged();
         }
 

@@ -1,50 +1,55 @@
 package com.example.zhenhaiyu.popularmovie;
 
 import android.app.Activity;
-import android.support.v7.widget.CardView;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * Created by zhenhaiyu on 2015-08-24.
- */
+/* good ref: http://andraskindler.com/blog/2014/migrating-to-recyclerview-from-listview/
+* */
 public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.PosterViewHolder> {
     private final String LOG_TAG = MoviePosterAdapter.class.getSimpleName();
-
-    private List<Movie> mMovies;
     private final Activity mContext;
+    private List<Movie> mMovies;
+    private static RecyclerViewClickListener mItemListener;
 
-    public MoviePosterAdapter(Activity context, List<Movie> movies) {
+    public MoviePosterAdapter(Activity context, RecyclerViewClickListener itemListener, List<Movie> movies) {
         mMovies = movies;
         mContext = context;
+        mItemListener = itemListener;
     }
 
     public void updateAllData(List<Movie> movies){
         mMovies.clear();
         mMovies.addAll(movies);
     }
+
+    /**
+     * ViewHolder class
+     */
     public static class PosterViewHolder extends RecyclerView.ViewHolder {
-        protected CardView cv;
+        protected View cv;
         protected TextView vTitle;
         protected TextView vRate;
         protected ImageView vPoster;
 
         public PosterViewHolder(View posterView) {
             super(posterView);
-            cv = (CardView) posterView.findViewById(R.id.cv_main);
+            cv = posterView.findViewById(R.id.cv_main);
             vPoster = (ImageView) posterView.findViewById(R.id.iv_poster);
             vTitle = (TextView) posterView.findViewById(R.id.tv_poster_title);
             vRate = (TextView) posterView.findViewById(R.id.tv_rate);
+
         }
     }
 
@@ -68,7 +73,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
 
     @Override
     public void onBindViewHolder(PosterViewHolder posterViewHolder, int i) {
-        Movie movie = mMovies.get(i);
+        final Movie movie = mMovies.get(i);
 
         ImageView imageView = posterViewHolder.vPoster;
         if (movie.mPosterPath != null) {
@@ -79,20 +84,25 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
             int posterHeight = 4*posterWidth/3;
             Picasso.with(mContext)
                     .load(posterURL)
-                    .placeholder(R.drawable.ic_launcher)
-                    .error(R.drawable.artist_placeholder_error)
+                    .placeholder(R.drawable.img_placeholder)
+                    .error(R.drawable.movie_placeholder_error)
                     .resize(posterWidth, posterHeight)
                     .into(imageView);
         } else{
-            imageView.setImageResource(R.drawable.artist_placeholder_error);
+            imageView.setImageResource(R.drawable.movie_placeholder_error);
         }
 
         posterViewHolder.vTitle.setText(movie.mOriginalTitle);
 
-        float rateStar = (float)movie.mAvgVote/2;
-
         String rateTxt = movie.mAvgVote + "/10";
         posterViewHolder.vRate.setText(rateTxt);
+
+        posterViewHolder.cv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mItemListener.recyclerViewListClicked(v, movie);
+            }
+        });
     }
 
     @Override
