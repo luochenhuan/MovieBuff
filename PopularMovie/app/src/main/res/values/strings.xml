@@ -2,7 +2,7 @@
     <string name="app_name">Movie Buff</string>
     <string name="title_activity_main">Popular Movies</string>
     <string name="title_activity_detail">Detail</string>
-    <string name="img_base_url">http://image.tmdb.org/t/p/w185/</string>
+    <string name="img_base_url">http://image.tmdb.org/t/p/</string>
     <string name="api_key">7247396130ccf8d000df83fb897fb6d9</string>
     <string name="nav_pref">nav_pref</string>
     <string name="sort_polularity">popularity.desc</string>

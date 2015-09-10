@@ -7,11 +7,11 @@
             android:id="@+id/sort_polularity_item"
             android:checked="true"
             android:icon="@drawable/ic_trending_up_black_24dp"
-            android:title="@string/sort_polularity"/>
+            android:title="by Popularity"/>
         <item
             android:id="@+id/sort_rating_item"
             android:icon="@drawable/ic_grade_black_24dp"
-            android:title="@string/sort_rating"/>
+            android:title="by Average Rate"/>
     </group>
 
     <group

@@ -77,7 +77,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
 
         ImageView imageView = posterViewHolder.vPoster;
         if (movie.mPosterPath != null) {
-            String posterURL = mContext.getString(R.string.img_base_url) + movie.mPosterPath;
+            String posterURL = mContext.getString(R.string.img_base_url) + "w185/" + movie.mPosterPath;
 //            Log.d(LOG_TAG, posterURL);
 
             int posterWidth = (int) mContext.getResources().getDimension(R.dimen.poster_width);
