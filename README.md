@@ -13,16 +13,11 @@ With ``MovieBuff`` app, you can:
   - ![](http://i98.photobucket.com/albums/l265/Haiyu_Zhen/Android%20Screen%20Shots/ezgif.com-video-to-gif_zpsgbzgljml.gif)
   - ![](https://camo.githubusercontent.com/0b3031ced336e7fa80d7eb211e60b1b924d20152/687474703a2f2f696d6775722e636f6d2f656b6d576c37712e676966)
 
-* main layout with posters:
-![](http://i98.photobucket.com/albums/l265/Haiyu_Zhen/Android%20Screen%20Shots/main_zps9ycqe8yb.png)
-* detail layout for a selected movie & Expandable effects on movie overview:
-![detail](http://i98.photobucket.com/albums/l265/Haiyu_Zhen/Android%20Screen%20Shots/detail_zpsandvgvyz.gif)
-
 * sort preference change from popularity to average voting:
 ![sort_change](http://i98.photobucket.com/albums/l265/Haiyu_Zhen/Android%20Screen%20Shots/sort_change_zpsxvvyviwl.gif)
 
 * Snackbar shows when network connection fails:
-![Snackbar](http://i98.photobucket.com/albums/l265/Haiyu_Zhen/Android%20Screen%20Shots/sort_change_zpsxvvyviwl.gif)
+![Snackbar](http://i98.photobucket.com/albums/l265/Haiyu_Zhen/Android%20Screen%20Shots/snack_zpskuz05ozf.png)
 
 
 ## Major Tech Features
@@ -54,6 +49,6 @@ The target sdk version is **23**, and the min sdk version is **15**.
 * [Picasso](http://square.github.io/picasso/)
 * [ExpandableTextView](https://github.com/Manabu-GT/ExpandableTextView)
 
-## Resources that I find truly helpful or saved my ass:
+## Resources that I found truly helpful and saved my ass:
 - [wiki of how to set up nav layout & action bar](https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer)
 - [tutorial on using Design Support Library](http://inthecheesefactory.com/blog/android-design-support-library-codelab/en)
