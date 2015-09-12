@@ -2,15 +2,14 @@ package com.example.zhenhaiyu.popularmovie;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.zhenhaiyu.popularmovie.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.List;
 * */
 public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.PosterViewHolder> {
     private final String LOG_TAG = MoviePosterAdapter.class.getSimpleName();
-    private final Activity mContext;
+    private final Context mContext;
     private List<Movie> mMovies;
     private static RecyclerViewClickListener mItemListener;
 
@@ -76,8 +75,8 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
         final Movie movie = mMovies.get(i);
 
         ImageView imageView = posterViewHolder.vPoster;
-        if (movie.mPosterPath != null) {
-            String posterURL = mContext.getString(R.string.img_base_url) + "w185/" + movie.mPosterPath;
+        if (movie.posterPath != null) {
+            String posterURL = mContext.getString(R.string.img_base_url) + "w185/" + movie.posterPath;
 //            Log.d(LOG_TAG, posterURL);
 
             int posterWidth = (int) mContext.getResources().getDimension(R.dimen.poster_width);
@@ -92,9 +91,9 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
             imageView.setImageResource(R.drawable.movie_placeholder_error);
         }
 
-        posterViewHolder.vTitle.setText(movie.mOriginalTitle);
+        posterViewHolder.vTitle.setText(movie.originalTitle);
 
-        String rateTxt = movie.mAvgVote + "/10";
+        String rateTxt = movie.avgVote + "/10";
         posterViewHolder.vRate.setText(rateTxt);
 
         posterViewHolder.cv.setOnClickListener(new View.OnClickListener() {

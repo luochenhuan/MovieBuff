@@ -5,18 +5,20 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import junit.framework.Assert;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 
 /* good ref to set up nav layout & action bar:
@@ -24,6 +26,9 @@ import android.widget.Toast;
  *
  * good ref to design library:
  * http://inthecheesefactory.com/blog/android-design-support-library-codelab/en
+ *
+ * example of Utilizing Http response cache:
+ * http://practicaldroid.blogspot.ca/2013/01/utilizing-http-response-cache.html
  */
 
 public class MainActivity extends AppCompatActivity {
@@ -31,26 +36,34 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_MAIN_FRAGMENT = "main_fragment";
     private static final String MyPREFERENCES = "MyPrefs" ;
 
-    private DrawerLayout mDrawerLayout;
-    private Toolbar mToolbar;
-    private ActionBarDrawerToggle mDrawerToggle;
     private MainActivityFragment mMainFragment;
-    SharedPreferences movieDisplayPreferences;
+    private SharedPreferences movieDisplayPreferences;
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+//    @Bind(R.id.nav_view) NavigationView mNavigationView;
+    @Bind(R.id.toolbar) Toolbar mToolbar;
+
+//    private DrawerLayout mDrawerLayout;
+//    private Toolbar mToolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ButterKnife.bind(this);
         // Initializing Toolbar
         initToolbar();
 
+        Assert.assertNotNull(mToolbar);   //Crashes!÷
+
         //Initializing NavigationView
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (navigationView != null) {
+//        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (mNavigationView != null) {
             //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
-            setupDrawerContent(navigationView);
+            setupDrawerContent(mNavigationView);
         }
 
         // Restore preferences or Set default value
@@ -59,10 +72,10 @@ public class MainActivity extends AppCompatActivity {
                         getResources().getString(R.string.sort_polularity));
         switch (NavPref){
             case "popularity.desc":
-                navigationView.getMenu().getItem(0).setChecked(true);
+                mNavigationView.getMenu().getItem(0).setChecked(true);
                 break;
             case "vote_average.desc":
-                navigationView.getMenu().getItem(1).setChecked(true);
+                mNavigationView.getMenu().getItem(1).setChecked(true);
                 break;
             default:
                 Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
@@ -72,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle = setupDrawerToggle();
         // Tie DrawerLayout events to the ActionBarToggle
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
 
         if (savedInstanceState != null) {
         // saved instance state, fragment may exist
@@ -94,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initToolbar() {
         // Set a Toolbar to replace the ActionBar.
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+//        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
         // Set the menu icon instead of the launcher icon.

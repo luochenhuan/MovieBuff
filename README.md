@@ -47,7 +47,10 @@ The target sdk version is **23**, and the min sdk version is **15**.
 
 ## Third-party Libraries
 * [Picasso](http://square.github.io/picasso/)
+* [butterknife](https://github.com/JakeWharton/butterknife)
 * [ExpandableTextView](https://github.com/Manabu-GT/ExpandableTextView)
+* [FABRevealLayout](https://github.com/truizlop/FABRevealLayout)
+* [okhttp](https://github.com/square/okhttp)
 
 ## Resources that I found truly helpful and saved my ass:
 - [wiki of how to set up nav layout & action bar](https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer)

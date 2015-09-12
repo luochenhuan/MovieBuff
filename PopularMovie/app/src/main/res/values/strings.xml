@@ -2,6 +2,7 @@
     <string name="app_name">Movie Buff</string>
     <string name="title_activity_main">Popular Movies</string>
     <string name="title_activity_detail">Detail</string>
+    <string name="movie_base_url">http://api.themoviedb.org/3</string>
     <string name="img_base_url">http://image.tmdb.org/t/p/</string>
     <string name="api_key"></string>
     <string name="nav_pref">nav_pref</string>
