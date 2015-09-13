@@ -37,7 +37,7 @@ public class DetailActivity extends AppCompatActivity {
 
     @Bind(R.id.detail_toolbar) Toolbar mToolbar;
     @Bind((R.id.collapsing_toolbar)) CollapsingToolbarLayout mCollapsingToolbar;
-    @Bind(R.id.favorite_fab) FloatingActionButton mFavoriteFab;
+//    @Bind(R.id.favorite_fab) FloatingActionButton mFavoriteFab;
     @Bind(R.id.detail_viewpager) ViewPager mViewPager;
     private Movie mMovie;
 
@@ -64,6 +64,20 @@ public class DetailActivity extends AppCompatActivity {
 
         mCollapsingToolbar.setTitle(mMovie.originalTitle);
 //        collapsingToolbar.setExpandedTitleTextAppearance(R.style.DetailHeader_TextStyle);
+
+        final ImageView imageView = (ImageView) findViewById(R.id.iv_backdrop);
+        if (mMovie.backdropPath != null) {
+            String posterURL = getString(R.string.img_base_url) +"w780/" + mMovie.backdropPath;
+            int backdropSize = (int) getResources().getDimension(R.dimen.detail_backdrop_height);
+            Picasso.with(this)
+                    .load(posterURL)
+                    .placeholder(R.drawable.img_placeholder)
+                    .error(R.drawable.movie_placeholder_error)
+                    .resize(backdropSize, 0)
+                    .into(imageView);
+        } else{
+            imageView.setImageResource(R.drawable.movie_placeholder_error);
+        }
 
         setupTabLayout();
 //        loadView();
@@ -101,67 +115,67 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-    @OnClick(R.id.favorite_fab)
-    public void OnClick(View view) {
-        int oldFav = toggleFav();
-        String snackInfo = "";
-        switch (oldFav) {
-            case 0:
-                snackInfo = "add to Favorites";
-                break;
-            case 1:
-                snackInfo = "remove from Favorites";
-                break;
-        }
-        Snackbar.make(layoutRoot, snackInfo, Snackbar.LENGTH_SHORT)
-                .setAction("Undo", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(DetailActivity.this, "Undo!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .show();
-    }
-
-    public int toggleFav(){
-        int isFav = 0;
-        Cursor movieCursor = this.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
-                new String[]{MovieContract.MovieEntry.COLUMN_FAVORITE},
-                MovieContract.MovieEntry.WHERE_CLAUSE_MOVIE_ID,
-                new String[]{""+ mMovie.id},
-                null,
-                null);
-
-        if (movieCursor.moveToFirst()) {
-            isFav = movieCursor.getInt(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_FAVORITE));
-            ContentValues favValues = new ContentValues();
-            switch (isFav){
-                case 0:
-                    favValues.put(MovieContract.MovieEntry.COLUMN_FAVORITE, 1);
-                    this.getContentResolver().update(
-                            MovieContract.MovieEntry.buildUri(mMovie.id),
-                            favValues,
-                            MovieContract.MovieEntry.WHERE_CLAUSE_MOVIE_ID,
-                            new String[]{"" + mMovie.id}
-                    );
-                    mFavoriteFab.setImageResource(R.drawable.ic_favorite_white_24dp);
-                    break;
-                case 1:
-                    favValues.put(MovieContract.MovieEntry.COLUMN_FAVORITE, 0);
-                    this.getContentResolver().update(
-                            MovieContract.MovieEntry.buildUri(mMovie.id),
-                            favValues,
-                            MovieContract.MovieEntry.WHERE_CLAUSE_MOVIE_ID,
-                            new String[]{"" + mMovie.id}
-                    );
-                    mFavoriteFab.setImageResource(R.drawable.ic_favorite_border_white_24dp);
-                    break;
-            }
-        }
-        movieCursor.close();
-
-        return isFav;
-    }
+//    @OnClick(R.id.favorite_fab)
+//    public void OnClick(View view) {
+//        int oldFav = toggleFav();
+//        String snackInfo = "";
+//        switch (oldFav) {
+//            case 0:
+//                snackInfo = "add to Favorites";
+//                break;
+//            case 1:
+//                snackInfo = "remove from Favorites";
+//                break;
+//        }
+//        Snackbar.make(layoutRoot, snackInfo, Snackbar.LENGTH_SHORT)
+//                .setAction("Undo", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Toast.makeText(DetailActivity.this, "Undo!", Toast.LENGTH_SHORT).show();
+//                    }
+//                })
+//                .show();
+//    }
+//
+//    public int toggleFav(){
+//        int isFav = 0;
+//        Cursor movieCursor = this.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
+//                new String[]{MovieContract.MovieEntry.COLUMN_FAVORITE},
+//                MovieContract.MovieEntry.WHERE_CLAUSE_MOVIE_ID,
+//                new String[]{""+ mMovie.id},
+//                null,
+//                null);
+//
+//        if (movieCursor.moveToFirst()) {
+//            isFav = movieCursor.getInt(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_FAVORITE));
+//            ContentValues favValues = new ContentValues();
+//            switch (isFav){
+//                case 0:
+//                    favValues.put(MovieContract.MovieEntry.COLUMN_FAVORITE, 1);
+//                    this.getContentResolver().update(
+//                            MovieContract.MovieEntry.buildUri(mMovie.id),
+//                            favValues,
+//                            MovieContract.MovieEntry.WHERE_CLAUSE_MOVIE_ID,
+//                            new String[]{"" + mMovie.id}
+//                    );
+//                    mFavoriteFab.setImageResource(R.drawable.ic_favorite_white_24dp);
+//                    break;
+//                case 1:
+//                    favValues.put(MovieContract.MovieEntry.COLUMN_FAVORITE, 0);
+//                    this.getContentResolver().update(
+//                            MovieContract.MovieEntry.buildUri(mMovie.id),
+//                            favValues,
+//                            MovieContract.MovieEntry.WHERE_CLAUSE_MOVIE_ID,
+//                            new String[]{"" + mMovie.id}
+//                    );
+//                    mFavoriteFab.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+//                    break;
+//            }
+//        }
+//        movieCursor.close();
+//
+//        return isFav;
+//    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

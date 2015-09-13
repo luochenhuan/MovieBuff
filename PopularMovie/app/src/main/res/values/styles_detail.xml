@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="DetailAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowActionBarOverlay">false</item>
-        <item name="windowNoTitle">true</item>
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowActionBarOverlay">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
     </style>
 
     <style name="ParallaxTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
     </style>
 
     <style name="Widget.Detail_CardContent" parent="android:Widget">
@@ -32,6 +32,21 @@
         <item name="android:typeface">sans</item>
         <!--<item name="android:textStyle">bold</item>-->
         <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="PrimaryTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">#0000FF</item>
+        <item name="tabTextAppearance">@style/PrimaryTabTextAppearance</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabMode">fixed</item>
+        <item name="tabIndicatorHeight">4dp</item>
+
+    </style>
+
+    <style name="PrimaryTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="textAllCaps">false</item>
     </style>
 
 
