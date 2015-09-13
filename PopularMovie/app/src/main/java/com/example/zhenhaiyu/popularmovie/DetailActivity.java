@@ -1,6 +1,8 @@
 package com.example.zhenhaiyu.popularmovie;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +17,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zhenhaiyu.popularmovie.data.MovieContract;
 import com.example.zhenhaiyu.popularmovie.model.Movie;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Picasso;
@@ -30,6 +33,7 @@ public class DetailActivity extends AppCompatActivity {
     @Bind(R.id.detail_content) CoordinatorLayout layoutRoot;
     @Bind(R.id.detail_toolbar) Toolbar mToolbar;
     @Bind((R.id.collapsing_toolbar)) CollapsingToolbarLayout mCollapsingToolbar;
+    @Bind(R.id.favorite_fab) FloatingActionButton mFavoriteFab;
     private Movie mMovie;
 
     @Override
@@ -104,8 +108,18 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.favorite_fab)
-    public void toggleFav(View view) {
-        Snackbar.make(layoutRoot, "Hey, I'm SnackBar!", Snackbar.LENGTH_SHORT)
+    public void OnClick(View view) {
+        int oldFav = toggleFav();
+        String snackInfo = "";
+        switch (oldFav) {
+            case 0:
+                snackInfo = "add to Favorites";
+                break;
+            case 1:
+                snackInfo = "remove from Favorites";
+                break;
+        }
+        Snackbar.make(layoutRoot, snackInfo, Snackbar.LENGTH_SHORT)
                 .setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -113,6 +127,46 @@ public class DetailActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    public int toggleFav(){
+        int isFav = 0;
+        Cursor movieCursor = this.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
+                new String[]{MovieContract.MovieEntry.COLUMN_FAVORITE},
+                MovieContract.MovieEntry.WHERE_CLAUSE_MOVIE_ID,
+                new String[]{""+ mMovie.id},
+                null,
+                null);
+
+        if (movieCursor.moveToFirst()) {
+            isFav = movieCursor.getInt(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_FAVORITE));
+            ContentValues favValues = new ContentValues();
+            switch (isFav){
+                case 0:
+                    favValues.put(MovieContract.MovieEntry.COLUMN_FAVORITE, 1);
+                    this.getContentResolver().update(
+                            MovieContract.MovieEntry.buildUri(mMovie.id),
+                            favValues,
+                            MovieContract.MovieEntry.WHERE_CLAUSE_MOVIE_ID,
+                            new String[]{"" + mMovie.id}
+                    );
+                    mFavoriteFab.setImageResource(R.drawable.ic_favorite_white_24dp);
+                    break;
+                case 1:
+                    favValues.put(MovieContract.MovieEntry.COLUMN_FAVORITE, 0);
+                    this.getContentResolver().update(
+                            MovieContract.MovieEntry.buildUri(mMovie.id),
+                            favValues,
+                            MovieContract.MovieEntry.WHERE_CLAUSE_MOVIE_ID,
+                            new String[]{"" + mMovie.id}
+                    );
+                    mFavoriteFab.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+                    break;
+            }
+        }
+        movieCursor.close();
+
+        return isFav;
     }
 
     @Override
