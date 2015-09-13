@@ -2,6 +2,7 @@ package com.example.zhenhaiyu.popularmovie.api;
 
 import com.example.zhenhaiyu.popularmovie.model.Movie;
 import com.example.zhenhaiyu.popularmovie.model.MovieListResponse;
+import com.example.zhenhaiyu.popularmovie.model.ReviewResponse;
 
 import java.util.List;
 
@@ -24,13 +25,11 @@ public interface MoviesAPI {
     // first page of movies sorted by popularity
 //    @GET("/movie/popular")
 //    void fetchPopularMovies(
-//            @Query("api_key") String apiKey,
 //            Callback<MovieListResponse> cb);
 
     //pages of movies sorted by popularity
     @GET("/movie/popular")
     void discoverPopularMovies(
-//            @Query("api_key") String apiKey,
             @Query("page") int page,
             Callback<List<Movie>> cb);
 
@@ -44,28 +43,25 @@ public interface MoviesAPI {
     // Next page of 20 sorted by rating
     @GET("/movie/top_rated")
     void discoverHighestRatedMovies(
-//             @Query("api_key") String apiKey,
              @Query("page") int page,
              Callback<List<Movie>> cb);
 
     // Get movie details by id
     @GET("/movie/{id}")
-    void fetchMovie(
+    void getMovie(
             @Path("id") int movieId,
-//            @Query("api_key") String apiKey,
             Callback<Movie> cb);
 
-//    // Video trailers, clips, etc
-//    @GET("/movie/{id}/videos")
-//    void fetchVideos(
-//            @Path("id") int movieId,
-//            @Query("api_key") String apiKey,
-//            Callback<MovieListResponse> cb);
-//
-//    // Movie reviews
-//    @GET("/movie/{id}/reviews")
-//    void fetchReviews(
-//            @Path("id") int movieId,
-//            @Query("api_key") String apiKey,
-//            Callback<List<Review>> cb);
+
+    @GET("/movie/{id}/videos")
+    void getVideos(
+            @Path("id") int movieId,
+            @Query("api_key") String apiKey,
+            Callback<MovieListResponse> cb);
+
+    @GET("/movie/{id}/reviews")
+    void getReviews(
+            @Path("id") int movieId,
+            @Query("api_key") String apiKey,
+            Callback<ReviewResponse> cb);
 }

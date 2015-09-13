@@ -7,6 +7,8 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -31,9 +33,12 @@ public class DetailActivity extends AppCompatActivity {
     private final String KEY_MOVIE = "saved_movie";
 
     @Bind(R.id.detail_content) CoordinatorLayout layoutRoot;
+    @Bind(R.id.detail_tabs) TabLayout tabLayout;
+
     @Bind(R.id.detail_toolbar) Toolbar mToolbar;
     @Bind((R.id.collapsing_toolbar)) CollapsingToolbarLayout mCollapsingToolbar;
     @Bind(R.id.favorite_fab) FloatingActionButton mFavoriteFab;
+    @Bind(R.id.detail_viewpager) ViewPager mViewPager;
     private Movie mMovie;
 
     @Override
@@ -60,52 +65,41 @@ public class DetailActivity extends AppCompatActivity {
         mCollapsingToolbar.setTitle(mMovie.originalTitle);
 //        collapsingToolbar.setExpandedTitleTextAppearance(R.style.DetailHeader_TextStyle);
 
-        loadView();
-
-        setupFAB();
-    }
-
-    private void loadView() {
-        TextView release = (TextView) findViewById(R.id.tv_release);
-        Log.d(LOG_TAG, mMovie.releaseDate);
-        if (!mMovie.releaseDate.equals("null"))
-            release.setText("Release : " + mMovie.releaseDate);
-        else
-            release.setText("No Release Date in database");
-        // rating
-        RatingBar rbRate = (RatingBar) findViewById(R.id.rb_rate_detail);
-        float rateStar = (float)mMovie.avgVote/2;
-        rbRate.setRating(rateStar);
-        TextView tvRate = (TextView) findViewById(R.id.tv_rate_detail);
-        String rateTxt = mMovie.avgVote + "/10";
-        tvRate.setText(rateTxt);
-
-        //overview
-        ExpandableTextView expOverviewTv = (ExpandableTextView) findViewById(R.id.expand_text_view);
-        // IMPORTANT - call setText on the ExpandableTextView to set the text content to display
-        if (!mMovie.overview.equals("null"))
-            expOverviewTv.setText(mMovie.overview);
-        else
-            expOverviewTv.setText("");
-
-        final ImageView imageView = (ImageView) findViewById(R.id.iv_backdrop);
-        if (mMovie.backdropPath != null) {
-            String posterURL = getString(R.string.img_base_url) +"w780/" + mMovie.backdropPath;
-            int backdropSize = (int) getResources().getDimension(R.dimen.detail_backdrop_height);
-            Picasso.with(this)
-                    .load(posterURL)
-                    .placeholder(R.drawable.img_placeholder)
-                    .error(R.drawable.movie_placeholder_error)
-                    .resize(backdropSize, 0)
-                    .into(imageView);
-        } else{
-            imageView.setImageResource(R.drawable.movie_placeholder_error);
-        }
-    }
-
-    public void setupFAB(){
+        setupTabLayout();
+//        loadView();
 
     }
+
+    private void setupTabLayout(){
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        DetailFragmentPagerAdapter pagerAdapter =
+                new DetailFragmentPagerAdapter(getSupportFragmentManager(), DetailActivity.this, mMovie);
+        mViewPager.setAdapter(pagerAdapter);
+
+        // Give the TabLayout the ViewPager
+        tabLayout.setTabsFromPagerAdapter(pagerAdapter);
+//        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setupWithViewPager(mViewPager);
+
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
 
     @OnClick(R.id.favorite_fab)
     public void OnClick(View view) {
