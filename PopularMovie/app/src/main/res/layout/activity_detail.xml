@@ -62,14 +62,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="top"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:layout_collapseMode="pin" />
-
-            <!--<android.support.design.widget.TabLayout-->
-                <!--android:id="@+id/detail_tabs"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_gravity="bottom"/>-->
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

@@ -1,6 +1,7 @@
 package com.example.zhenhaiyu.popularmovie;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -13,7 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
+
+import com.example.zhenhaiyu.popularmovie.model.Movie;
 
 import junit.framework.Assert;
 
@@ -29,9 +33,12 @@ import butterknife.ButterKnife;
  *
  * example of Utilizing Http response cache:
  * http://practicaldroid.blogspot.ca/2013/01/utilizing-http-response-cache.html
+ *
+ * official doc of Supporting Tablets and Handsets:
+ * http://developer.android.com/guide/practices/tablets-and-handsets.html
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String TAG_MAIN_FRAGMENT = "main_fragment";
     private static final String MyPREFERENCES = "MyPrefs" ;
@@ -55,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         // Initializing Toolbar
         initToolbar();
-
-        Assert.assertNotNull(mToolbar);   //Crashes!÷
 
         //Initializing NavigationView
 //        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -105,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 
     private void initToolbar() {
         // Set a Toolbar to replace the ActionBar.

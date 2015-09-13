@@ -73,7 +73,7 @@ public class MainActivityFragment extends Fragment implements RecyclerViewClickL
                 }
             }
         };
-        mPosterAdapter = new MoviePosterAdapter(getActivity(), this, new ArrayList<Movie>());
+        mPosterAdapter = new MoviePosterAdapter(getContext(), this, new ArrayList<Movie>());
     }
 
 

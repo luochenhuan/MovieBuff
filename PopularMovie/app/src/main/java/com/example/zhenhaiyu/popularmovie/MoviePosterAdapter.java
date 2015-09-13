@@ -71,8 +71,9 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
                         movieValues
                 );
             }
+            movieCursor.close();
+
         }
-        movieCursor.close();
     }
 
     /**
