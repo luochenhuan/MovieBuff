@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.zhenhaiyu.popularmovie.api.MovieListResponse;
+import com.example.zhenhaiyu.popularmovie.model.MovieListResponse;
 import com.example.zhenhaiyu.popularmovie.api.MoviesAPI;
 import com.example.zhenhaiyu.popularmovie.api.MoviesReqService;
 import com.example.zhenhaiyu.popularmovie.model.Movie;

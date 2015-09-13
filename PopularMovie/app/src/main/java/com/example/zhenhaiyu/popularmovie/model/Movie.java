@@ -1,8 +1,10 @@
 package com.example.zhenhaiyu.popularmovie.model;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.zhenhaiyu.popularmovie.data.MovieContract;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -94,4 +96,23 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    public ContentValues getContentValues(){
+        ContentValues movieValues = new ContentValues();
+        movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, this.id);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, this.title);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE, this.originalTitle);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, this.releaseDate);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, this.overview);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, this.avgVote);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_VOTE_COUNT, this.voteCount);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, this.posterPath);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_BACKDROP_PATH, this.backdropPath);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_POPULARITY, this.popularity);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_LANGUAGE, this.originalLang);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_VIDEO, this.video? 1: 0);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_ADULT, this.adult? 1: 0);
+
+        return movieValues;
+    }
 }

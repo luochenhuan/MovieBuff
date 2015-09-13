@@ -1,6 +1,7 @@
 package com.example.zhenhaiyu.popularmovie.api;
 
 import com.example.zhenhaiyu.popularmovie.model.Movie;
+import com.example.zhenhaiyu.popularmovie.model.MovieListResponse;
 
 import java.util.List;
 

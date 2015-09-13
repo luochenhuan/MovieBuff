@@ -1,9 +1,8 @@
-package com.example.zhenhaiyu.popularmovie.api;
+package com.example.zhenhaiyu.popularmovie.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.zhenhaiyu.popularmovie.model.Movie;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

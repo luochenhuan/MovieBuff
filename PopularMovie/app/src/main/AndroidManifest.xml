@@ -30,6 +30,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
+        <provider
+            android:authorities="com.example.zhenhaiyu.popularmovie"
+            android:name=".data.MovieProvider"
+            android:enabled="true"
+            android:exported="false"
+            android:syncable="true">
+        </provider>
     </application>
 
 </manifest>

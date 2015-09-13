@@ -1,14 +1,20 @@
 package com.example.zhenhaiyu.popularmovie;
 
 import android.app.Activity;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.zhenhaiyu.popularmovie.data.MovieContract;
 import com.example.zhenhaiyu.popularmovie.model.Movie;
 import com.squareup.picasso.Picasso;
 
@@ -22,7 +28,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
     private List<Movie> mMovies;
     private static RecyclerViewClickListener mItemListener;
 
-    public MoviePosterAdapter(Activity context, RecyclerViewClickListener itemListener, List<Movie> movies) {
+    public MoviePosterAdapter(Context context, RecyclerViewClickListener itemListener, List<Movie> movies) {
         mMovies = movies;
         mContext = context;
         mItemListener = itemListener;
@@ -31,6 +37,42 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
     public void updateAllData(List<Movie> movies){
         mMovies.clear();
         mMovies.addAll(movies);
+        bulkUpdate();
+    }
+
+    public void bulkUpdate(){
+        Cursor movieCursor = null;
+        for (int i = 0; i < mMovies.size(); i++){
+            Movie movie = mMovies.get(i);
+            ContentValues movieValues = movie.getContentValues();
+
+            // First, check if the location with this city name exists in the db
+            movieCursor = mContext.getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                MovieContract.MovieEntry.WHERE_CLAUSE_MOVIE_ID,
+                new String[]{""+ movie.id},
+                null,
+                null);
+
+            if (movieCursor.moveToFirst()) {
+                // update
+//                Log.d(LOG_TAG, "update item " + movie.title);
+                mContext.getContentResolver().update(
+                        MovieContract.MovieEntry.buildUri(movie.id),
+                        movieValues,
+                        MovieContract.MovieEntry.WHERE_CLAUSE_MOVIE_ID,
+                        new String[]{""+ movie.id}
+                );
+            } else {
+//                Log.d(LOG_TAG, "insert new item " + movie.title);
+                Uri insertedUri = mContext.getContentResolver().insert(
+                        MovieContract.MovieEntry.CONTENT_URI,
+                        movieValues
+                );
+            }
+        }
+        movieCursor.close();
     }
 
     /**
