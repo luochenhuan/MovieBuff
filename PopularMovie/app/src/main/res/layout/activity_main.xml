@@ -18,9 +18,10 @@
 
         <!-- The main content view -->
         <FrameLayout
-            android:id="@+id/content_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:id="@+id/main_frag_container"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+        </FrameLayout>
 
     </LinearLayout>
 

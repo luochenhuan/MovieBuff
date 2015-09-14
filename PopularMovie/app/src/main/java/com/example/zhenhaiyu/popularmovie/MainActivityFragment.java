@@ -1,11 +1,11 @@
 package com.example.zhenhaiyu.popularmovie;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,10 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.zhenhaiyu.popularmovie.model.MovieListResponse;
 import com.example.zhenhaiyu.popularmovie.api.MoviesAPI;
 import com.example.zhenhaiyu.popularmovie.api.MoviesReqService;
 import com.example.zhenhaiyu.popularmovie.model.Movie;
+import com.example.zhenhaiyu.popularmovie.model.MovieListResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,17 +35,27 @@ import retrofit.client.Response;
 public class MainActivityFragment extends Fragment implements RecyclerViewClickListener {
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
     private static final String MyPREFERENCES = "MyPrefs" ;
-    private static final int SPAN_COUNT = 2;
     private final String KEY_MOVIES = "saved_movies";
 
     private List<Movie> mMovies;
     private MoviePosterAdapter mPosterAdapter;
 
     private RecyclerView mRecyclerView;
+    private GridLayoutManager mGridLayoutManager;
+
     private SharedPreferences.OnSharedPreferenceChangeListener mPrefListener;
-    SharedPreferences movieDisplayPreferences;
+    private MovieClickListener mMovieClickListener;
+
     private String mNavPref;
+
+    SharedPreferences movieDisplayPreferences;
     MoviesReqService mMoviesReqService;
+
+
+    // Assign the listener implementing events interface that will receive the events
+    public void setMovieClickListener(@NonNull MovieClickListener listener){
+        this.mMovieClickListener = listener;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -73,6 +83,7 @@ public class MainActivityFragment extends Fragment implements RecyclerViewClickL
                 }
             }
         };
+
         mPosterAdapter = new MoviePosterAdapter(getContext(), this, new ArrayList<Movie>());
     }
 
@@ -85,7 +96,8 @@ public class MainActivityFragment extends Fragment implements RecyclerViewClickL
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.main_recyclerview);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), SPAN_COUNT));
+        mGridLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.rv_grid_columns));
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setAdapter(mPosterAdapter);
 
         if (savedInstanceState != null) {
@@ -98,8 +110,6 @@ public class MainActivityFragment extends Fragment implements RecyclerViewClickL
                 // get service instance
                 mMoviesReqService = MoviesReqService.getInstance(getContext());
                 fetchMovies(mNavPref);
-//                FetchMoviesTask moviesTask = new FetchMoviesTask();
-//                moviesTask.execute(mNavPref);
             }
             else {
                 snackbarInform();
@@ -126,12 +136,10 @@ public class MainActivityFragment extends Fragment implements RecyclerViewClickL
 
     @Override
     public void recyclerViewListClicked(View v, Movie m) {
-//        Toast.makeText(getActivity(), "click " + m.mTitle,
+//        Toast.makeText(getActivity(), "click " + m.title,
 //                        Toast.LENGTH_SHORT).show();
-        Context context = getActivity();
-        Intent detailIntent = new Intent(context, DetailActivity.class);
-        detailIntent.putExtra(getResources().getString(R.string.title_activity_detail), m);
-        startActivity(detailIntent);
+        if (mMovieClickListener != null)
+            mMovieClickListener.movieSelected(v,m); // <---- fire listener here
     }
 
     @Override
@@ -140,6 +148,12 @@ public class MainActivityFragment extends Fragment implements RecyclerViewClickL
         outState.putParcelableArrayList(KEY_MOVIES, (ArrayList<Movie>)mMovies);
         super.onSaveInstanceState(outState);
     }
+
+//    @Override
+//    public void onDetach() {
+//        mMovieClickListener = (view, movie) -> {};
+//        super.onDetach();
+//    }
 
     @Override
     public void onDestroy() {
@@ -178,7 +192,7 @@ public class MainActivityFragment extends Fragment implements RecyclerViewClickL
     }
 
     private void snackbarInform(){
-        Snackbar.make(getActivity().findViewById(R.id.content_fragment),
+        Snackbar.make(getActivity().findViewById(R.id.main_frag_container),
                         "Woops! Seems we lost network connection ...", Snackbar.LENGTH_INDEFINITE)
                 .setAction("CLOSE", new View.OnClickListener() {
                     @Override

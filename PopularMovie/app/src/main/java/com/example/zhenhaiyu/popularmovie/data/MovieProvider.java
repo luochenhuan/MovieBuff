@@ -57,8 +57,8 @@ public class MovieProvider extends ContentProvider {
                     // tableName, tableColumns, whereClause, whereArgs, groupBy, having, orderBy
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         Cursor retCursor;
-        Log.d(LOG_TAG, "uri=" + uri + " proj=" + Arrays.toString(projection) +
-                " selection=" + selection + " args=" + Arrays.toString(selectionArgs) + ")");
+//        Log.d(LOG_TAG, "uri=" + uri + " proj=" + Arrays.toString(projection) +
+//                " selection=" + selection + " args=" + Arrays.toString(selectionArgs) + ")");
 
         switch (sUriMatcher.match(uri)) {
             case MOVIE:
@@ -150,7 +150,7 @@ public class MovieProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        Log.d(LOG_TAG, "update(uri=" + uri + ", values=" + values.toString() + ")");
+//        Log.d(LOG_TAG, "update(uri=" + uri + ", values=" + values.toString() + ")");
 
         final SQLiteDatabase db = mDbHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);

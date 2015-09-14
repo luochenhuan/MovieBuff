@@ -22,10 +22,6 @@ public interface MoviesAPI {
 //            @Query("api_key") String apiKey,
             Callback<MovieListResponse> cb);
 
-    // first page of movies sorted by popularity
-//    @GET("/movie/popular")
-//    void fetchPopularMovies(
-//            Callback<MovieListResponse> cb);
 
     //pages of movies sorted by popularity
     @GET("/movie/popular")
@@ -33,18 +29,11 @@ public interface MoviesAPI {
             @Query("page") int page,
             Callback<List<Movie>> cb);
 
-    // first page of movies sorted by rating
-    // @GET("/discover/movie?sort_by=vote_average.desc")
-//    @GET("/movie/top_rated")
-//    void discoverHighestRatedMovies(
-//            @Query("api_key") String apiKey,
-//            Callback<MovieListResponse> cb);
-
-    // Next page of 20 sorted by rating
+    // pages of movies sorted by rating
     @GET("/movie/top_rated")
     void discoverHighestRatedMovies(
              @Query("page") int page,
-             Callback<List<Movie>> cb);
+             Callback<MovieListResponse> cb);
 
     // Get movie details by id
     @GET("/movie/{id}")
@@ -52,16 +41,13 @@ public interface MoviesAPI {
             @Path("id") int movieId,
             Callback<Movie> cb);
 
-
     @GET("/movie/{id}/videos")
     void getVideos(
-            @Path("id") int movieId,
-            @Query("api_key") String apiKey,
+            @Path("id") long movieId,
             Callback<MovieListResponse> cb);
 
     @GET("/movie/{id}/reviews")
     void getReviews(
-            @Path("id") int movieId,
-            @Query("api_key") String apiKey,
+            @Path("id") long movieId,
             Callback<ReviewResponse> cb);
 }

@@ -27,7 +27,6 @@ public class DetailFragment extends Fragment {
     private final String LOG_TAG = DetailFragment.class.getSimpleName();
     public static final String ARG_MOVIE = "ARG_MOVIE";
     private Movie mMovie;
-    final private Context mContext;
 
     /**
      * Use this factory method to create a new instance of
@@ -42,11 +41,6 @@ public class DetailFragment extends Fragment {
         args.putParcelable(ARG_MOVIE, movie);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public DetailFragment() {
-        // Required empty public constructor
-        mContext = getContext();
     }
 
     @Override
@@ -68,7 +62,7 @@ public class DetailFragment extends Fragment {
 
     private void loadView(View rootView) {
         TextView release = (TextView) rootView.findViewById(R.id.tv_release);
-        Log.d(LOG_TAG, mMovie.releaseDate);
+//        Log.d(LOG_TAG, mMovie.releaseDate);
         if (!mMovie.releaseDate.equals("null"))
             release.setText("Release : " + mMovie.releaseDate);
         else

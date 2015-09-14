@@ -16,11 +16,33 @@
         <!-- The ActionBar -->
         <include layout="@layout/toolbar"/>
 
-        <!-- The main content view -->
-        <FrameLayout
-            android:id="@+id/content_fragment"
+        <!-- The 2-column content view -->
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:id="@+id/frags">
+            <!-- "Main Fragment" -->
+            <FrameLayout
+                android:id="@+id/main_frag_container"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/detail_container"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/select_movie" />
+            </FrameLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -11,5 +11,6 @@
     <dimen name="card_padding">0dp</dimen>
     <dimen name="card_rad">2dp</dimen>
     <dimen name="list_item_avatar_size">40dp</dimen>
+    <dimen name="main_frag_size">400dp</dimen>
 
 </resources>

@@ -47,7 +47,7 @@ public class MoviesReqService {
                 .create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL) // ?
+//                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(END_POINT)
                 .setRequestInterceptor(requestInterceptor)
                 .setConverter(new GsonConverter(gson))

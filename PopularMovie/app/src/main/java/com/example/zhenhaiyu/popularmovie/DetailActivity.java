@@ -128,12 +128,12 @@ public class DetailActivity extends AppCompatActivity {
                 break;
         }
         Snackbar.make(layoutRoot, snackInfo, Snackbar.LENGTH_SHORT)
-                .setAction("Undo", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(DetailActivity.this, "Undo!", Toast.LENGTH_SHORT).show();
-                    }
-                })
+//                .setAction("Undo", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Toast.makeText(DetailActivity.this, "Undo!", Toast.LENGTH_SHORT).show();
+//                    }
+//                })
                 .show();
     }
 

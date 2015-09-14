@@ -19,8 +19,6 @@ import android.widget.Toast;
 
 import com.example.zhenhaiyu.popularmovie.model.Movie;
 
-import junit.framework.Assert;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -36,23 +34,26 @@ import butterknife.ButterKnife;
  *
  * official doc of Supporting Tablets and Handsets:
  * http://developer.android.com/guide/practices/tablets-and-handsets.html
+ *
+ * tutorial on customized listener:
+ * https://guides.codepath.com/android/Creating-Custom-Listeners
  */
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements MovieClickListener{
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private final Context mContext = this;
     private static final String TAG_MAIN_FRAGMENT = "main_fragment";
     private static final String MyPREFERENCES = "MyPrefs" ;
 
     private MainActivityFragment mMainFragment;
     private SharedPreferences movieDisplayPreferences;
     private ActionBarDrawerToggle mDrawerToggle;
+    private boolean mMultiScreen;
 
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-//    @Bind(R.id.nav_view) NavigationView mNavigationView;
     @Bind(R.id.toolbar) Toolbar mToolbar;
+//    @Bind(R.id.nav_view) NavigationView mNavigationView;
 
-//    private DrawerLayout mDrawerLayout;
-//    private Toolbar mToolbar;
 
 
     @Override
@@ -60,16 +61,22 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mMultiScreen = findViewById(R.id.detail_container) != null;
+        Log.d(LOG_TAG, "mMultiScreen = " + mMultiScreen);
+
         // Initializing Toolbar
         initToolbar();
 
         //Initializing NavigationView
-//        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         if (mNavigationView != null) {
             //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
             setupDrawerContent(mNavigationView);
         }
+        mDrawerToggle = setupDrawerToggle();
+        // Tie DrawerLayout events to the ActionBarToggle
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         // Restore preferences or Set default value
         movieDisplayPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
@@ -87,10 +94,6 @@ public class MainActivity extends AppCompatActivity{
                 break;
         }
 
-        mDrawerToggle = setupDrawerToggle();
-        // Tie DrawerLayout events to the ActionBarToggle
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
 
         if (savedInstanceState != null) {
         // saved instance state, fragment may exist
@@ -101,11 +104,22 @@ public class MainActivity extends AppCompatActivity{
             // only create fragment if they haven't been instantiated already
             Log.d(LOG_TAG, " create new fragment instance");
             mMainFragment = new MainActivityFragment();
+            mMainFragment.setMovieClickListener(this);
+//            // Setup the listener for MainActivityFragment
+//            mMainFragment.setMovieClickListener(new MovieClickListener() {
+//                @Override
+//                public void movieSelected(View view, Movie movie) {
+//                    Log.d(LOG_TAG, "movieSelected " + movie.title);
+//                    Intent detailIntent = new Intent(mContext, DetailActivity.class);
+//                    detailIntent.putExtra(getResources().getString(R.string.title_activity_detail), movie);
+//                    startActivity(detailIntent);
+//                }
+//            });
         }
 
         if (!mMainFragment.isInLayout()) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_fragment, mMainFragment, TAG_MAIN_FRAGMENT); // Always add a tag to a fragment being inserted into container
+            transaction.replace(R.id.main_frag_container, mMainFragment, TAG_MAIN_FRAGMENT); // Always add a tag to a fragment being inserted into container
             transaction.commit();
         }
 
@@ -182,6 +196,19 @@ public class MainActivity extends AppCompatActivity{
 
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
+
+        mMainFragment = (MainActivityFragment) getSupportFragmentManager().findFragmentByTag(TAG_MAIN_FRAGMENT);
+        if (mMainFragment == null) {
+            // only create fragment if they haven't been instantiated already
+            Log.d(LOG_TAG, " create new fragment instance");
+            mMainFragment = new MainActivityFragment();
+            mMainFragment.setMovieClickListener(this);
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.main_frag_container, mMainFragment, TAG_MAIN_FRAGMENT); // Always add a tag to a fragment being inserted into container
+            transaction.commit();
+        }
+
     }
 
     @Override
@@ -197,4 +224,22 @@ public class MainActivity extends AppCompatActivity{
         super.onDestroy();
 
     }
+
+    @Override
+    public void movieSelected(View view, Movie movie) {
+        Log.d(LOG_TAG, "movieSelected " + movie.title);
+
+        if (findViewById(R.id.detail_container) != null){
+
+
+
+
+        }
+        else {
+            Intent detailIntent = new Intent(this, DetailActivity.class);
+            detailIntent.putExtra(getResources().getString(R.string.title_activity_detail), movie);
+            startActivity(detailIntent);
+        }
+    }
+
 }

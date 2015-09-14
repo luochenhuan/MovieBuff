@@ -38,4 +38,8 @@ public class ReviewResponse implements Parcelable {
             return new ReviewResponse[size];
         }
     };
+
+    public List<Review> getReviews(){
+        return reviews;
+    }
 }
